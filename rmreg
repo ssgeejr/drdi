@@ -1,0 +1,22 @@
+#!/bin/bash
+echo off
+
+HDR='Accept: application/vnd.docker.distribution.manifest.v2+json'
+REG_URI='localhost:5000/v2/'
+curl_reg="curl $HDR"
+
+echo "list all available repositories"
+#curl -v -H $HDR http://localhost:5000/v2/_catalog
+curl -H $HDR http://localhost:5000/v2/_catalog
+
+echo "list all available tags"
+curl -H $HDR http://localhost:5000/v2/alpine/tags/list
+
+
+echo "list the manifest"
+curl -H $HDR http://localhost:5000/v2/alpine/manifests/3.7
+
+
+
+echo "Attempting to delete by sha value"
+curl -H $HDR -X DELETE http://localhost:5000/v2/alpine/manifests/92251458088c638061cda8fd8b403b76d661a4dc6b7ee71b6affcf1872557b2b

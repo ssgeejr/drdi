@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  registry:
+    image: registry
+    container_name: registry
+    volumes:
+      - /opt/registry:/var/lib/registry
+    environment:
+      REGISTRY_STORAGE_DELETE_ENABLED: 'true'
+    ports:
+      - 5000:5000

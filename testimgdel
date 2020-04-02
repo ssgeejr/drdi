@@ -1,0 +1,17 @@
+#!/bin/bash
+echo off
+
+HDR='Accept:application/vnd.docker.distribution.manifest.v2+json'
+HOST='http://localhost:5000/v2'
+IMAGE='alpine'
+VER='3.7'
+
+echo "check for tags of the ${IMAGE} image"
+echo "curl -H $HDR ${HOST}/${IMAGE}/tags/list"
+curl -H $HDR ${HOST}/${IMAGE}/tags/list
+
+
+echo "fetch SHA for ${IMAGE}:${VER}"
+echo "curl -H $HDR ${HOST}/${IMAGE}/tags/list"
+curl -H $HDR ${HOST}/${IMAGE}/tags/list
+

@@ -1,0 +1,122 @@
+docker run -dt --restart=always --name=local-registry -v /data/n01/development0:/var/lib/registry -e REGISTRY_STORAGE_DELETE_ENABLED=true -p 5000:5000 registry
+
+
+
+docker pull alpine:3.7
+docker tag alpine:3.7 localhost:5000/demo/apline:3.7
+docker push localhost:5000/demo/apline:3.7
+
+ 
+
+curl http://localhost:5000/v2/_catalog
+ 
+#!/bin/bash
+
+
+ 
+
+imageDel=${1}
+
+
+ 
+
+if [[ ! -z "${imageDel}" ]]; then
+
+    echo "requested image to be deleted: ${imageDel}"
+
+else
+
+    echo "ERROR::::::::::::::: environment parameter missing \n"
+
+    echo "Example usage "
+
+    echo "$0 imageName"
+
+    echo "$0 demo/apline"
+
+    exit
+
+fi
+
+
+ 
+
+ 
+
+registry='localhost:5000'
+
+name='demo/apline'
+
+version='3.7'
+
+echo "..............................."
+
+echo "REGISTRY: $registry"
+
+echo "IMAGE: $name"
+
+echo "VERSION: $version"
+
+echo "..............................."4
+
+#docker pull alpine:3.7
+
+#docker tag alpine:3.7 localhost:5000/demo/apline:3.7
+
+#docker push localhost:5000/demo/apline:3.7
+
+
+ 
+
+curl http://localhost:5000/v2/_catalog
+
+ 
+
+curl -v -sSL -X DELETE "http://${registry}/v2/${name}/manifests/$( \
+
+     curl -sSL -I \
+
+     -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+
+     http://${registry}/v2/${name}/manifests/${version} \
+
+     | awk '$1 == "Docker-Content-Digest:" { print $2 }' \
+
+     | tr -d $'\r')"
+
+
+ 
+
+docker exec -it local-registry bin/registry garbage-collect /etc/docker/registry/config.yml
+
+
+ 
+
+
+ 
+
+echo "curl -v -sSL -X DELETE \"http://${registry}/v2/${name}/manifests/${sha}\""
+
+
+ 
+
+#curl -v -sSL -X DELETE \"http://${registry}/v2/${name}/manifests/${sha}\"
+
+#curl -v -sSL -X DELETE \'http://${registry}/v2/${imageDel}/manifests/${sha}\'
+
+#curl -v -sSL -X DELETE "http://localhost:5000/v2/${imageDel}/manifests/${sha}"
+
+#curl -v -sSL -X DELETE http://${registry}/v2/${imageDel}/manifests/${sha}
+
+
+ 
+
+curl http://localhost:5000/v2/_catalog
+
+
+ 
+
+#curl -v -sSL -X DELETE \"http://${registry}/v2/${imageDel}/manifests/${sha}\"
+
+curl -v -sS -X DELETE "http://localhost:5000/v2/${imageDel}/manifests/${sha}"
+
